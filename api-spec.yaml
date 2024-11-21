@@ -1,0 +1,314 @@
+openapi: 3.0.3
+info:
+  title: Articles API
+  description: "API for managing articles, allowing creation, retrieval, updating, deletion, and searching of articles."
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+tags:
+  - name: ArticleController
+paths:
+  /articles:
+    get:
+      tags:
+        - ArticleController
+      description: Retrieve a list of article names
+      operationId: getArticleNames
+      parameters:
+        - name: author
+          in: query
+          required: false
+          schema:
+            type: string
+          example: "Christopher Nolan"
+        - name: tag
+          in: query
+          required: false
+          schema:
+            type: string
+          example: "blockbuster"
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          example: "2024-01-01"
+      responses:
+        '200':
+          description: List of article names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example: ["The Art of Storytelling in 'Inception'", "Directing Masterpieces: The Nolan Method", "Revolutionizing Cinema: The Impact of 'Interstellar'"]
+        '400':
+          description: Invalid query parameters
+    post:
+      tags:
+        - ArticleController
+      description: Create a new article
+      operationId: createArticle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleCreate'
+            example:
+              title: "The Evolution of Special Effects in Sci-Fi"
+              content: "Special effects have transformed the way we experience movies, with advancements bringing unimaginable worlds to life..."
+              author: "Ridley Scott"
+              tags: ["special effects", "sci-fi"]
+      responses:
+        '201':
+          description: Article created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+              example:
+                id: "12345"
+                title: "The Evolution of Special Effects in Sci-Fi"
+                content: "Special effects have transformed the way we experience movies, with advancements bringing unimaginable worlds to life..."
+                author: "Ridley Scott"
+                tags: ["special effects", "sci-fi"]
+                createdAt: "2024-01-01T03:54:00Z"
+                updatedAt: "2024-01-01T03:54:00Z"
+        '400':
+          description: Invalid input
+  /articles/{id}:
+    get:
+      tags:
+        - ArticleController
+      description: Retrieve a specific article by its ID
+      operationId: getArticleById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "12345"
+      responses:
+        '200':
+          description: Article details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+              example:
+                id: "12345"
+                title: "The Evolution of Special Effects in Sci-Fi"
+                content: "Special effects have transformed the way we experience movies, with advancements bringing unimaginable worlds to life..."
+                author: "Ridley Scott"
+                tags: ["special effects", "sci-fi"]
+                createdAt: "2024-01-01T03:54:00Z"
+                updatedAt: "2024-01-01T03:54:00Z"
+        '404':
+          description: Article not found
+    put:
+      tags:
+        - ArticleController
+      description: Update an article by its ID
+      operationId: updateArticle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "12345"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleUpdate'
+            example:
+              title: "The Evolution of Special Effects in Sci-Fi (Updated)"
+              content: "Special effects have transformed the way we experience movies, with advancements bringing unimaginable worlds to life. This update explores the latest technologies..."
+              tags: ["special effects", "sci-fi", "technology"]
+      responses:
+        '200':
+          description: Article updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+              example:
+                id: "12345"
+                title: "The Evolution of Special Effects in Sci-Fi (Updated)"
+                content: "Special effects have transformed the way we experience movies, with advancements bringing unimaginable worlds to life. This update explores the latest technologies..."
+                author: "Ridley Scott"
+                tags: ["special effects", "sci-fi", "technology"]
+                createdAt: "2024-01-01T03:54:00Z"
+                updatedAt: "2024-01-01T04:00:00Z"
+        '400':
+          description: Invalid input
+        '404':
+          description: Article not found
+        '401':
+          description: Unauthorized (requires auth controller)
+    delete:
+      tags:
+        - ArticleController
+      description: Delete an article by its ID
+      operationId: deleteArticle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "12345"
+      responses:
+        '200':
+          description: Article deleted successfully
+        '404':
+          description: Article not found
+        '401':
+          description: Unauthorized (requires auth controller)
+  /articles/search:
+    get:
+      tags:
+        - ArticleController
+      description: Search articles based on a query
+      operationId: searchArticles
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "cinematography in Blade Runner"
+      responses:
+        '200':
+          description: List of articles matching the search query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
+              example:
+                - id: "12345"
+                  title: "The Evolution of Special Effects in Sci-Fi"
+                  content: "Special effects have transformed the way we experience movies, with advancements bringing unimaginable worlds to life..."
+                  author: "Ridley Scott"
+                  tags: ["special effects", "sci-fi"]
+                  createdAt: "2024-01-01T03:54:00Z"
+                  updatedAt: "2024-01-01T03:54:00Z"
+        '400':
+          description: Invalid query parameters
+  /articles/popular:
+    get:
+      tags:
+        - ArticleController
+      description: Retrieve popular articles
+      operationId: getPopularArticles
+      parameters:
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          example: "2024-01-01"
+        - name: tag
+          in: query
+          required: false
+          schema:
+            type: string
+          example: "blockbuster"
+      responses:
+        '200':
+          description: List of popular articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
+              example:
+                - id: "12345"
+                  title: "The Evolution of Special Effects in Sci-Fi"
+                  content: "Special effects have transformed the way we experience movies, with advancements bringing unimaginable worlds to life..."
+                  author: "Ridley Scott"
+                  tags: ["special effects", "sci-fi"]
+                  createdAt: "2024-01-01T03:54:00Z"
+                  updatedAt: "2024-01-01T03:54:00Z"
+        '400':
+          description: Invalid query parameters
+
+components:
+  schemas:
+    Article:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        author:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      example:
+        id: "12345"
+        title: "The Evolution of Special Effects in Sci-Fi"
+        content: "Special effects have transformed the way we experience movies, with advancements bringing unimaginable worlds to life..."
+        author: "Ridley Scott"
+        tags: ["special effects", "sci-fi"]
+        createdAt: "2024-01-01T03:54:00Z"
+        updatedAt: "2024-01-01T03:54:00Z"
+    ArticleCreate:
+      type: object
+      required:
+        - title
+        - content
+        - author
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        author:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+      example:
+        title: "The Evolution of Special Effects in Sci-Fi"
+        content: "Special effects have transformed the way we experience movies, with advancements bringing unimaginable worlds to life..."
+        author: "Ridley Scott"
+        tags: ["special effects", "sci-fi"]
+    ArticleUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+      example:
+        title: "The Evolution of Special Effects in Sci-Fi (Updated)"
+        content: "Special effects have transformed the way we experience movies, with advancements bringing unimaginable worlds to life. This update explores the latest technologies..."
+        tags: ["special effects", "sci-fi", "technology"]
+
