@@ -1,0 +1,380 @@
+openapi: 3.0.3
+info:
+  description: "API for managing articles, allowing creation, retrieval, updating,\
+    \ deletion, and searching of articles."
+  title: Articles API
+  version: 1.0.0
+servers:
+- url: http://localhost:8000
+tags:
+- name: ArticleController
+paths:
+  /articles:
+    get:
+      description: Retrieve a list of article names
+      operationId: get_article_names
+      parameters:
+      - example: Christopher Nolan
+        explode: true
+        in: query
+        name: author
+        required: false
+        schema:
+          type: string
+        style: form
+      - example: blockbuster
+        explode: true
+        in: query
+        name: tag
+        required: false
+        schema:
+          type: string
+        style: form
+      - example: 2024-01-01
+        explode: true
+        in: query
+        name: date
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+              - The Art of Storytelling in 'Inception'
+              - "Directing Masterpieces: The Nolan Method"
+              - "Revolutionizing Cinema: The Impact of 'Interstellar'"
+              schema:
+                items:
+                  type: string
+                type: array
+          description: List of article names
+        "400":
+          description: Invalid query parameters
+      tags:
+      - ArticleController
+      x-openapi-router-controller: openapi_server.controllers.article_controller_controller
+    post:
+      description: Create a new article
+      operationId: create_article
+      requestBody:
+        content:
+          application/json:
+            example:
+              title: The Evolution of Special Effects in Sci-Fi
+              content: "Special effects have transformed the way we experience movies,\
+                \ with advancements bringing unimaginable worlds to life..."
+              author: Ridley Scott
+              tags:
+              - special effects
+              - sci-fi
+            schema:
+              $ref: '#/components/schemas/ArticleCreate'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                id: "12345"
+                title: The Evolution of Special Effects in Sci-Fi
+                content: "Special effects have transformed the way we experience movies,\
+                  \ with advancements bringing unimaginable worlds to life..."
+                author: Ridley Scott
+                tags:
+                - special effects
+                - sci-fi
+                createdAt: 2024-01-01T03:54:00Z
+                updatedAt: 2024-01-01T03:54:00Z
+              schema:
+                $ref: '#/components/schemas/Article'
+          description: Article created successfully
+        "400":
+          description: Invalid input
+      tags:
+      - ArticleController
+      x-openapi-router-controller: openapi_server.controllers.article_controller_controller
+  /articles/popular:
+    get:
+      description: Retrieve popular articles
+      operationId: get_popular_articles
+      parameters:
+      - example: 2024-01-01
+        explode: true
+        in: query
+        name: date
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      - example: blockbuster
+        explode: true
+        in: query
+        name: tag
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+              - id: "12345"
+                title: The Evolution of Special Effects in Sci-Fi
+                content: "Special effects have transformed the way we experience movies,\
+                  \ with advancements bringing unimaginable worlds to life..."
+                author: Ridley Scott
+                tags:
+                - special effects
+                - sci-fi
+                createdAt: 2024-01-01T03:54:00Z
+                updatedAt: 2024-01-01T03:54:00Z
+              schema:
+                items:
+                  $ref: '#/components/schemas/Article'
+                type: array
+          description: List of popular articles
+        "400":
+          description: Invalid query parameters
+      tags:
+      - ArticleController
+      x-openapi-router-controller: openapi_server.controllers.article_controller_controller
+  /articles/search:
+    get:
+      description: Search articles based on a query
+      operationId: search_articles
+      parameters:
+      - example: cinematography in Blade Runner
+        explode: true
+        in: query
+        name: query
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+              - id: "12345"
+                title: The Evolution of Special Effects in Sci-Fi
+                content: "Special effects have transformed the way we experience movies,\
+                  \ with advancements bringing unimaginable worlds to life..."
+                author: Ridley Scott
+                tags:
+                - special effects
+                - sci-fi
+                createdAt: 2024-01-01T03:54:00Z
+                updatedAt: 2024-01-01T03:54:00Z
+              schema:
+                items:
+                  $ref: '#/components/schemas/Article'
+                type: array
+          description: List of articles matching the search query
+        "400":
+          description: Invalid query parameters
+      tags:
+      - ArticleController
+      x-openapi-router-controller: openapi_server.controllers.article_controller_controller
+  /articles/{id}:
+    delete:
+      description: Delete an article by its ID
+      operationId: delete_article
+      parameters:
+      - example: "12345"
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Article deleted successfully
+        "404":
+          description: Article not found
+        "401":
+          description: Unauthorized (requires auth controller)
+      tags:
+      - ArticleController
+      x-openapi-router-controller: openapi_server.controllers.article_controller_controller
+    get:
+      description: Retrieve a specific article by its ID
+      operationId: get_article_by_id
+      parameters:
+      - example: "12345"
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                id: "12345"
+                title: The Evolution of Special Effects in Sci-Fi
+                content: "Special effects have transformed the way we experience movies,\
+                  \ with advancements bringing unimaginable worlds to life..."
+                author: Ridley Scott
+                tags:
+                - special effects
+                - sci-fi
+                createdAt: 2024-01-01T03:54:00Z
+                updatedAt: 2024-01-01T03:54:00Z
+              schema:
+                $ref: '#/components/schemas/Article'
+          description: Article details
+        "404":
+          description: Article not found
+      tags:
+      - ArticleController
+      x-openapi-router-controller: openapi_server.controllers.article_controller_controller
+    put:
+      description: Update an article by its ID
+      operationId: update_article
+      parameters:
+      - example: "12345"
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              title: The Evolution of Special Effects in Sci-Fi (Updated)
+              content: "Special effects have transformed the way we experience movies,\
+                \ with advancements bringing unimaginable worlds to life. This update\
+                \ explores the latest technologies..."
+              tags:
+              - special effects
+              - sci-fi
+              - technology
+            schema:
+              $ref: '#/components/schemas/ArticleUpdate'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                id: "12345"
+                title: The Evolution of Special Effects in Sci-Fi (Updated)
+                content: "Special effects have transformed the way we experience movies,\
+                  \ with advancements bringing unimaginable worlds to life. This update\
+                  \ explores the latest technologies..."
+                author: Ridley Scott
+                tags:
+                - special effects
+                - sci-fi
+                - technology
+                createdAt: 2024-01-01T03:54:00Z
+                updatedAt: 2024-01-01T04:00:00Z
+              schema:
+                $ref: '#/components/schemas/Article'
+          description: Article updated successfully
+        "400":
+          description: Invalid input
+        "404":
+          description: Article not found
+        "401":
+          description: Unauthorized (requires auth controller)
+      tags:
+      - ArticleController
+      x-openapi-router-controller: openapi_server.controllers.article_controller_controller
+components:
+  schemas:
+    Article:
+      example:
+        id: "12345"
+        title: The Evolution of Special Effects in Sci-Fi
+        content: "Special effects have transformed the way we experience movies, with\
+          \ advancements bringing unimaginable worlds to life..."
+        author: Ridley Scott
+        tags:
+        - special effects
+        - sci-fi
+        createdAt: 2024-01-01T03:54:00Z
+        updatedAt: 2024-01-01T03:54:00Z
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        author:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      title: Article
+      type: object
+    ArticleCreate:
+      example:
+        title: The Evolution of Special Effects in Sci-Fi
+        content: "Special effects have transformed the way we experience movies, with\
+          \ advancements bringing unimaginable worlds to life..."
+        author: Ridley Scott
+        tags:
+        - special effects
+        - sci-fi
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        author:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      required:
+      - author
+      - content
+      - title
+      title: ArticleCreate
+      type: object
+    ArticleUpdate:
+      example:
+        title: The Evolution of Special Effects in Sci-Fi (Updated)
+        content: "Special effects have transformed the way we experience movies, with\
+          \ advancements bringing unimaginable worlds to life. This update explores\
+          \ the latest technologies..."
+        tags:
+        - special effects
+        - sci-fi
+        - technology
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      title: ArticleUpdate
+      type: object
