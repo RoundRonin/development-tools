@@ -1,5 +1,7 @@
 FROM python:3-alpine
 
+RUN apk add --no-cache gcc musl-dev linux-headers python3-dev
+
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 

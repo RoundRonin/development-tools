@@ -32,8 +32,8 @@ def create_article():  # noqa: E501
             content=article_create.content,
             author=article_create.author,
             tags=article_create.tags,
-            created_at=datetime.utcnow().isoformat(),
-            updated_at=datetime.utcnow().isoformat()
+            created_at=datetime.now().isoformat(),
+            updated_at=datetime.now().isoformat()
         )
         
         return new_article, 201
@@ -49,10 +49,11 @@ def delete_article(id_):  # noqa: E501
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]]
     """
-    return None, 200
+    print(f"Received ID: {id_}")
+    return id_, 200
 
 
-def get_article_by_id(id):  # noqa: E501
+def get_article_by_id(id_):  # noqa: E501
     """get_article_by_id
 
     Retrieve a specific article by its ID # noqa: E501
@@ -63,7 +64,7 @@ def get_article_by_id(id):  # noqa: E501
     :rtype: Union[Article, Tuple[Article, int], Tuple[Article, int, Dict[str, str]]]
     """
     article = Article(
-        id=id,
+        id=id_,
         title="The Evolution of Special Effects in Sci-Fi",
         content="Special effects have transformed the way we experience movies...",
         author="Ridley Scott",
@@ -146,7 +147,7 @@ def search_articles(query):  # noqa: E501
     return searched_articles, 200
 
 
-def update_article(id, article_update):  # noqa: E501
+def update_article(id_, article_update):  # noqa: E501
     """update_article
 
     Update an article by its ID # noqa: E501
@@ -161,13 +162,13 @@ def update_article(id, article_update):  # noqa: E501
     if connexion.request.is_json:
         article_update = ArticleUpdate.from_dict(connexion.request.get_json())  # noqa: E501
     updated_article = Article(
-        id=id,
+        id=id_,
         title=article_update.title,
         content=article_update.content,
         author="Ridley Scott",
         tags=article_update.tags,
         created_at="2024-01-01T03:54:00Z",
-        updated_at=datetime.utcnow().isoformat()
+        updated_at=datetime.now().isoformat()
     )
     return updated_article, 200
 
