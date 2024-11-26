@@ -45,7 +45,7 @@ Testing the request:
 ## Description
 
 Uses prometheus-client within the flask app to track all the metrics.
-Metrics:
+Uses pull model and gets the data from ../metrics endpoint automatically (described in prometheus.yml file). Metrics are being pulled from python-server:8080 (in the basic case: localhost/8080).
 
 Uses prometheus server in a docker container to gather and store all the
 metrics
