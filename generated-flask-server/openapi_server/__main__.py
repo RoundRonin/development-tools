@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 
-import logging
 import connexion
 import time
+import os
 from flask import request
-from .prometheus_service import record_request_data, metrics
+from .services.prometheus_service import record_request_data, metrics
 from openapi_server import encoder
+from .config.logging_handler import setup_logging
 
-# Setup logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-for handler in logger.handlers:
-    handler.terminator = '\n'
+logger = setup_logging()
+port = int(os.getenv('PYTHON_SERVER_PORT', 8080))
+
+# # Setup logging
+# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+# logger = logging.getLogger(__name__)
+# for handler in logger.handlers:
+#     handler.terminator = '\n'
 
 def main():
     app = connexion.App(__name__, specification_dir='./openapi/')
@@ -43,7 +47,7 @@ def main():
         return metrics()
 
     logger.debug("Running Flask app...")
-    app.run(port=8080)
+    app.run(port)
 
 if __name__ == '__main__':
     main()

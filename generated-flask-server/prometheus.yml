@@ -1,7 +1,10 @@
 global:
-  scrape_interval: 15s
+  scrape_interval: 5s
 
 scrape_configs:
   - job_name: 'python-server'
     static_configs:
       - targets: ['python-server:8080']
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['loki:3100']

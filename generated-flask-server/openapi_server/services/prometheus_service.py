@@ -2,12 +2,9 @@ import logging
 import psutil
 from prometheus_client import Counter, Histogram, Gauge, generate_latest
 from flask import Response
+from ..config.logging_handler import setup_logging
 
-# Setup logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-for handler in logger.handlers:
-    handler.terminator = '\n'
+logger = setup_logging()
 
 # Define metrics
 REQUEST_COUNT = Counter('request_count', 'Total Request Count', ['method', 'endpoint', 'http_status'])
