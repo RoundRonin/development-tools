@@ -79,4 +79,5 @@ http://localhost:9090/
 
 ## Image
 
-![изображение](https://github.com/user-attachments/assets/58049c60-8bd1-446b-9d39-8514a2d7cfa0)
+![изображение](https://github.com/user-attachments/assets/0be58030-b8f9-4277-8d41-e02b1310775e)
+
