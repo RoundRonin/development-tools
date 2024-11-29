@@ -1,0 +1,621 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": {
+                    "type": "datasource",
+                    "uid": "grafana"
+                },
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "type": "dashboard"
+            }
+        ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 6,
+    "links": [],
+    "panels": [
+        {
+            "datasource": {
+                "type": "tempo",
+                "uid": "P214B5B846CF3925F"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": false,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 0
+            },
+            "id": 7,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "11.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "tempo",
+                        "uid": "P214B5B846CF3925F"
+                    },
+                    "filters": [
+                        {
+                            "id": "a52fdc99",
+                            "operator": ">",
+                            "scope": "span",
+                            "tag": "http.status_code",
+                            "value": [
+                                "500"
+                            ],
+                            "valueType": "int"
+                        }
+                    ],
+                    "limit": 20,
+                    "query": "{ span.http.status_code >= 500 } | count() > 2\r\n",
+                    "queryType": "traceql",
+                    "refId": "A",
+                    "tableType": "traces"
+                }
+            ],
+            "title": "Server Errors occur often",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "uid": "P214B5B846CF3925F"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": false,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "fillOpacity": 80,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineWidth": 1,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 0
+            },
+            "id": 6,
+            "options": {
+                "barRadius": 0,
+                "barWidth": 0.97,
+                "fullHighlight": false,
+                "groupWidth": 0.7,
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "orientation": "auto",
+                "showValue": "auto",
+                "stacking": "none",
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                },
+                "xTickLabelRotation": 0,
+                "xTickLabelSpacing": 0
+            },
+            "pluginVersion": "11.3.1",
+            "targets": [
+                {
+                    "filters": [
+                        {
+                            "id": "26af5070",
+                            "operator": "=",
+                            "scope": "span"
+                        },
+                        {
+                            "id": "min-duration",
+                            "operator": ">",
+                            "tag": "duration",
+                            "value": "0.5",
+                            "valueType": "duration"
+                        },
+                        {
+                            "id": "duration-type",
+                            "value": "trace"
+                        }
+                    ],
+                    "limit": 20,
+                    "query": "{ traceDuration > 0.5s } | count() > 2\r\n",
+                    "queryType": "traceql",
+                    "refId": "A",
+                    "tableType": "traces"
+                }
+            ],
+            "title": "High latency requests",
+            "type": "barchart"
+        },
+        {
+            "datasource": {
+                "type": "tempo",
+                "uid": "P214B5B846CF3925F"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "custom": {
+                        "fillOpacity": 70,
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineWidth": 0,
+                        "spanNulls": false
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 24,
+                "x": 0,
+                "y": 8
+            },
+            "id": 1,
+            "options": {
+                "alignValue": "left",
+                "legend": {
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "mergeValues": true,
+                "rowHeight": 0.9,
+                "showValue": "auto",
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "11.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "tempo",
+                        "uid": "P214B5B846CF3925F"
+                    },
+                    "expr": "sum(rate({resource.service.name=\"articles-api\"}[5m])) by (method)",
+                    "filters": [
+                        {
+                            "id": "3a37684f",
+                            "operator": "=",
+                            "scope": "span"
+                        }
+                    ],
+                    "format": "time_series",
+                    "interval": "",
+                    "legendFormat": "{{method}}",
+                    "limit": 20,
+                    "query": "{resource.service.name=\"articles-api\"}",
+                    "queryType": "traceql",
+                    "refId": "A",
+                    "tableType": "traces"
+                }
+            ],
+            "title": "Total Requests",
+            "type": "state-timeline"
+        },
+        {
+            "datasource": {
+                "type": "tempo",
+                "uid": "P214B5B846CF3925F"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "scaleDistribution": {
+                            "type": "linear"
+                        }
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 11,
+                "w": 12,
+                "x": 0,
+                "y": 18
+            },
+            "id": 3,
+            "options": {
+                "calculate": true,
+                "calculation": {},
+                "cellGap": 2,
+                "cellValues": {},
+                "color": {
+                    "exponent": 0.5,
+                    "fill": "dark-orange",
+                    "mode": "scheme",
+                    "reverse": false,
+                    "scale": "exponential",
+                    "scheme": "Oranges",
+                    "steps": 128
+                },
+                "exemplars": {
+                    "color": "rgba(255,0,255,0.7)"
+                },
+                "filterValues": {
+                    "le": 1e-9
+                },
+                "legend": {
+                    "show": false
+                },
+                "rowsFrame": {
+                    "layout": "auto"
+                },
+                "showValue": "never",
+                "tooltip": {
+                    "mode": "none",
+                    "showColorScale": false,
+                    "yHistogram": false
+                },
+                "yAxis": {
+                    "axisPlacement": "left",
+                    "reverse": false
+                }
+            },
+            "pluginVersion": "11.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "tempo",
+                        "uid": "P214B5B846CF3925F"
+                    },
+                    "expr": "histogram_quantile(0.95, sum(rate({resource.service.name=\"articles-api\"}[5m])) by (le))",
+                    "filters": [
+                        {
+                            "id": "2445f450",
+                            "operator": "=",
+                            "scope": "span"
+                        }
+                    ],
+                    "format": "time_series",
+                    "interval": "",
+                    "legendFormat": "P95 Latency",
+                    "limit": 20,
+                    "queryType": "traceql",
+                    "refId": "A",
+                    "tableType": "traces"
+                }
+            ],
+            "title": "Latency Distribution",
+            "type": "heatmap"
+        },
+        {
+            "datasource": {
+                "type": "tempo",
+                "uid": "P214B5B846CF3925F"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {
+                        "align": "auto",
+                        "cellOptions": {
+                            "type": "auto"
+                        },
+                        "inspect": false
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "ms"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 11,
+                "w": 12,
+                "x": 12,
+                "y": 18
+            },
+            "id": 4,
+            "options": {
+                "cellHeight": "sm",
+                "footer": {
+                    "countRows": false,
+                    "fields": "",
+                    "reducer": [
+                        "sum"
+                    ],
+                    "show": false
+                },
+                "showHeader": true
+            },
+            "pluginVersion": "11.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "tempo",
+                        "uid": "P214B5B846CF3925F"
+                    },
+                    "expr": "topk(5, avg(rate({resource.service.name=\"articles-api\"}[5m])) by (endpoint))",
+                    "filters": [
+                        {
+                            "id": "b462c591",
+                            "operator": "=",
+                            "scope": "span"
+                        }
+                    ],
+                    "format": "table",
+                    "interval": "",
+                    "legendFormat": "{{endpoint}}",
+                    "limit": 20,
+                    "queryType": "traceql",
+                    "refId": "A",
+                    "tableType": "traces"
+                }
+            ],
+            "title": "Top Slow Endpoints",
+            "type": "table"
+        },
+        {
+            "datasource": {
+                "type": "tempo",
+                "uid": "P214B5B846CF3925F"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": false,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "line",
+                        "fillOpacity": 20,
+                        "gradientMode": "hue",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "linear",
+                        "lineWidth": 4,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 24,
+                "x": 0,
+                "y": 29
+            },
+            "id": 5,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "11.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "tempo",
+                        "uid": "P214B5B846CF3925F"
+                    },
+                    "expr": "sum(rate({resource.service.name=\"articles-api\"}[5m])) by (instance)",
+                    "filters": [
+                        {
+                            "id": "f6af6557",
+                            "operator": "=",
+                            "scope": "span"
+                        }
+                    ],
+                    "format": "time_series",
+                    "interval": "",
+                    "legendFormat": "{{instance}}",
+                    "limit": 20,
+                    "queryType": "traceql",
+                    "refId": "A",
+                    "tableType": "traces"
+                }
+            ],
+            "title": "Requests Over Time",
+            "type": "timeseries"
+        }
+    ],
+    "preload": false,
+    "refresh": "",
+    "schemaVersion": 40,
+    "tags": [],
+    "templating": {
+        "list": []
+    },
+    "time": {
+        "from": "now-30m",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "browser",
+    "title": "Articles API Dashboard",
+    "uid": "ce5d6czjz9nuoe",
+    "version": 2,
+    "weekStart": ""
+}

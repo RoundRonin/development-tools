@@ -4,14 +4,20 @@ services:
   python-server:
     build: .
     volumes:
-      - .:/usr/src/app
+      - type: bind
+        source: ./
+        target: /usr/src/app
       - my_app_logs:/var/log/my_app
+      - migrations_volume:/usr/src/app/migrations
     ports:
       - "${PYTHON_SERVER_PORT}:8080"
+    environment:
+      - FLASK_APP=openapi_server.__main__:app
     depends_on:
       - prometheus
       - promtail
       - loki
+      - postgres
     networks:
       - monitoring
 
@@ -62,6 +68,30 @@ services:
     networks:
       - monitoring
 
+  tempo:
+    image: grafana/tempo
+    ports:
+      - "4317:4317"
+      - "3200:3200"
+    volumes:
+      - ./tempo-config.yml:/etc/tempo/tempo-config.yaml
+    command: -config.file=/etc/tempo/tempo-config.yaml - distributor.log_received_spans.enabled -log.level=debug
+    networks:
+      - monitoring
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: articles_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - monitoring
+
 networks:
   monitoring:
     driver: bridge
@@ -69,3 +99,5 @@ networks:
 volumes:
   my_app_logs:
   grafana-storage:
+  postgres_data:
+  migrations_volume:
