@@ -1,7 +1,7 @@
 # OpenAPI generated server
 
 ## Overview
-FLASK server generated using Open API generator based on the specs.
+FLASK server generated using Open API generator based on the specs. Uses PostgreSQL as a db for actual data.
 
 ## Requirements
 Docker
@@ -126,5 +126,29 @@ LogQL is used to provide certain queries. For example (can be found in ./grafana
 "{job=\"varlogs\"} |= `DELETE` |= \"DEBUG\" | logfmt --strict"
 
 ![изображение](https://github.com/user-attachments/assets/e6837d8b-2260-4f9b-b52e-ff5f779857b5)
+
+# Traces
+
+Traces are managed using Grafana Tempo and are sent to it's instance using OpenTelemetry. Spans are created to showcase the time it takes to complete different parts of a request.
+
+## Access
+
+Tempo is running using gRPC, it's port is 4317 to push data using gRPC. Pushing using HTTP is also available, though not used. The port is 4318.
+
+To retrieve data from Tempo
+```
+http://localhost:3200
+```
+
+## Image
+
+Dashboards are provided to anylize traces:
+
+![image]
+
+Here is an example of a trace:
+
+![изображение](https://github.com/user-attachments/assets/c6fa26ec-02cd-4134-878f-f4430117c537)
+
 
 
