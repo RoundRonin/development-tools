@@ -168,5 +168,10 @@ Here is an example of a trace:
 
 ![изображение](https://github.com/user-attachments/assets/c6fa26ec-02cd-4134-878f-f4430117c537)
 
+# CI/CD
 
+Created 3 CI/CD workflows:
+1. Test the API
+2. Push image to dockerhub
+3. Deploy (an imitation)
 
