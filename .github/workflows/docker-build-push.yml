@@ -24,5 +24,6 @@ jobs:
 
       - name: Build and push Docker image
         run: |
+          cd generated-flask-server
           docker build -t ${{ secrets.DOCKER_USERNAME }}/flask:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/flask:latest
