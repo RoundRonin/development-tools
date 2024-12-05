@@ -21,7 +21,7 @@ jobs:
 
       - name: Run Docker container
         run: |
-          docker compose up --build -d
+          docker compose up -f ../../generated-flask-server/docker-compose.yml --build -d
 
       - name: Check running containers
         run: docker ps
