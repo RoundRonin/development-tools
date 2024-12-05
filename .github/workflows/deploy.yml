@@ -17,7 +17,9 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker image
-        run: docker build -t my-flask-app:latest .
+        run: 
+          cd generated-flask-server
+          docker build -t my-flask-app:latest .
 
       - name: Run Docker container
         run: |
