@@ -67,7 +67,7 @@ migrate_extension = Migrate(app, db)
 
 def initialize_database():
     with app.app_context():
-        if not os.path.exists('migrations'):
+        if not os.path.exists('migrations/env.py'):
             init(directory='migrations')
         else:
             logger.debug("Migrations directory already exists")
