@@ -1,0 +1,18 @@
+FROM python:3-alpine
+
+RUN apk add --no-cache gcc musl-dev linux-headers python3-dev
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY requirements.txt /usr/src/app/
+COPY test-requirements.txt /usr/src/app/
+
+RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -rtest-requirements.txt 
+
+COPY . /usr/src/app
+
+EXPOSE 8080
+
+ENTRYPOINT ["pytest", "--tb=short"]

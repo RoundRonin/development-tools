@@ -2,14 +2,31 @@ import unittest
 
 from flask import json
 
-from openapi_server.models.article import Article  # noqa: E501
+from openapi_server.models.article import Article as ApiArticle  # noqa: E501
 from openapi_server.models.article_create import ArticleCreate  # noqa: E501
 from openapi_server.models.article_update import ArticleUpdate  # noqa: E501
 from openapi_server.test import BaseTestCase
 
+from openapi_server.DAL.database import db
+from openapi_server.DAL.models import Article
 
 class TestArticleControllerController(BaseTestCase):
     """ArticleControllerController integration test stubs"""
+
+    def setUp(self): 
+        super().setUp() 
+        
+        self.sample_article = Article( 
+            title="The Evolution of Special Effects in Sci-Fi", 
+            content="Special effects have transformed the way we experience movies...", 
+            author="Ridley Scott", 
+            tags=["special effects", "sci-fi"] 
+        ) 
+        db.session.add(self.sample_article) 
+        db.session.commit() 
+
+    def tearDown(self): 
+        super().tearDown()
 
     def test_create_article(self):
         """Test case for create_article
@@ -27,22 +44,9 @@ class TestArticleControllerController(BaseTestCase):
             headers=headers,
             data=json.dumps(article_create),
             content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
-
-    def test_delete_article(self):
-        """Test case for delete_article
-
-        
-        """
-        headers = { 
-        }
-        response = self.client.open(
-            '/articles/{id}'.format(id='12345'),
-            method='DELETE',
-            headers=headers)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        # self.assert200(response,
+        #                'Response body is : ' + response.data.decode('utf-8'))
+        self.assertEqual(response.status_code, 201, 'Response body is : ' + response.data.decode('utf-8'))
 
     def test_get_article_by_id(self):
         """Test case for get_article_by_id
@@ -53,7 +57,7 @@ class TestArticleControllerController(BaseTestCase):
             'Accept': 'application/json',
         }
         response = self.client.open(
-            '/articles/{id}'.format(id='12345'),
+            '/articles/{id}'.format(id='1'),
             method='GET',
             headers=headers)
         self.assert200(response,
@@ -124,7 +128,7 @@ class TestArticleControllerController(BaseTestCase):
             'Content-Type': 'application/json',
         }
         response = self.client.open(
-            '/articles/{id}'.format(id='12345'),
+            '/articles/{id}'.format(id='1'),
             method='PUT',
             headers=headers,
             data=json.dumps(article_update),
@@ -132,6 +136,19 @@ class TestArticleControllerController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+    def test_delete_article(self):
+        """Test case for delete_article
+
+        
+        """
+        headers = { 
+        }
+        response = self.client.open(
+            '/articles/{id}'.format(id='1'),
+            method='DELETE',
+            headers=headers)
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
 
 if __name__ == '__main__':
     unittest.main()
