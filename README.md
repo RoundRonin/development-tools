@@ -1,7 +1,7 @@
 # OpenAPI generated server
 
 ## Overview
-FLASK server generated using Open API generator based on the specs.
+FLASK server generated using Open API generator based on the specs. Uses PostgreSQL as a db for actual data.
 
 ## Requirements
 Docker
@@ -83,6 +83,14 @@ http://localhost:9090/
 
 ![изображение](https://github.com/user-attachments/assets/0be58030-b8f9-4277-8d41-e02b1310775e)
 
+PromQL examples:
+```PromQL
+rate(request_count_total[1m])
+sum by (method, endpoint, http_status) (rate(request_count_total[1m]))
+sum by (status_code) (rate(status_code_count_total[1m]))
+histogram_quantile(0.95, sum(rate(request_latency_seconds_bucket[5m])) by (le, method, endpoint))
+```
+
 # Logging
 
 ## Description
@@ -122,9 +130,43 @@ http://localhost:9080
 ## Image
 
 Additional dashboards can be created to allow search for specific log instances or categories.
-LogQL is used to provide certain queries. For example (can be found in ./grafana/provisioning/dashboards/loki-dashboard.json):
+LogQL is used to provide certain queries. 
+
+For example (can be found in ./grafana/provisioning/dashboards/loki-dashboard.json):
+```LogQL
 "{job=\"varlogs\"} |= `DELETE` |= \"DEBUG\" | logfmt --strict"
+```
 
 ![изображение](https://github.com/user-attachments/assets/e6837d8b-2260-4f9b-b52e-ff5f779857b5)
+
+# Traces
+
+Traces are managed using Grafana Tempo and are sent to it's instance using OpenTelemetry. Spans are created to showcase the time it takes to complete different parts of a request.
+
+## Access
+
+Tempo is running using gRPC, it's port is 4317 to push data using gRPC. Pushing using HTTP is also available, though not used. The port is 4318.
+
+To retrieve data from Tempo
+```
+http://localhost:3200
+```
+
+## Image
+
+Dashboards are provided to anylize traces:
+
+![image](https://github.com/user-attachments/assets/57d99cba-2f5b-40ef-8833-1ab898a6847a)
+
+TraceQL examples:
+```TraceQL
+{traceDuration > 4ms} | count() > 3
+{resource.service.name="articles-api" && duration>10ms}
+```
+
+Here is an example of a trace:
+
+![изображение](https://github.com/user-attachments/assets/c6fa26ec-02cd-4134-878f-f4430117c537)
+
 
 
