@@ -65,13 +65,27 @@ handle_errors(app)
 
 migrate_extension = Migrate(app, db)
 
-def initialize_database():
-    with app.app_context():
-        if not os.path.exists('migrations/env.py'):
-            init(directory='migrations')
-        else:
-            logger.debug("Migrations directory already exists")
-        migrate(directory='migrations', message='Initial migration.')
+# def initialize_database():
+#     with app.app_context():
+#         if not os.path.exists('migrations/env.py'):
+#             init(directory='migrations')
+#         else:
+#             logger.debug("Migrations directory already exists")
+#         migrate(directory='migrations', message='Initial migration.')
+#         upgrade(directory='migrations')
+        
+def initialize_database(): 
+    with app.app_context(): 
+        if not os.path.exists('migrations/env.py'): 
+            init(directory='migrations') 
+        else: 
+            logger.debug("Migrations directory already exists") 
+        if not os.path.exists('migrations/versions'): 
+            os.makedirs('migrations/versions') 
+        else: 
+            logger.debug("Migrations versions directory already exists") 
+
+        migrate(directory='migrations', message='Initial migration.') 
         upgrade(directory='migrations')
 
 initialize_database()
