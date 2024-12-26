@@ -85,7 +85,8 @@ http://localhost:9090/
 
 ## Image
 
-![image](https://github.com/user-attachments/assets/2aedc926-d9c9-49ff-b7a7-512b119a1d73)
+![image](https://github.com/user-attachments/assets/e1961723-07c7-42e6-b48d-ae893e93c77d)
+
 
 
 PromQL examples:
