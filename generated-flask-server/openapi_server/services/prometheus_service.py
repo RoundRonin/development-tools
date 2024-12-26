@@ -16,6 +16,8 @@ REQUEST_LATENCY = Histogram('request_latency_seconds', 'Request latency', ['meth
 STATUS_CODE_COUNT = Counter('status_code_count', 'HTTP status codes', ['status_code'], registry=registry)
 CPU_USAGE = Gauge('cpu_usage', 'CPU usage', registry=registry)
 MEMORY_USAGE = Gauge('memory_usage', 'Memory usage', registry=registry)
+PRODUCT_COUNT = Counter('product_count', 'Total number of products', ['product_type'], registry=registry)
+ACTIVE_ARTICLE_COUNT = Gauge('active_article_count', 'Number of active articles', registry=registry)
 
 executor = ThreadPoolExecutor(max_workers=5)
 

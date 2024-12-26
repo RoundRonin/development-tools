@@ -9,6 +9,7 @@ from openapi_server.models.article_create import ArticleCreate as ApiArticleCrea
 from openapi_server.models.article_update import ArticleUpdate as ApiArticleUpdate  # noqa: E501
 from openapi_server.DAL.models import Article, ArticleCreate, ArticleUpdate
 from openapi_server.DAL.database import db
+from openapi_server.services.prometheus_service import ACTIVE_ARTICLE_COUNT, PRODUCT_COUNT
 
 tracer = trace.get_tracer(__name__)
 
@@ -26,7 +27,7 @@ def create_article():  # noqa: E501
         if connexion.request.is_json:
             with tracer.start_as_current_span("parse_request"):
                 api_article_create = ApiArticleCreate.from_dict(connexion.request.get_json())  # noqa: E501
-            
+
             if not api_article_create.title or not api_article_create.content or not api_article_create.author:
                 span.set_attribute("error", True)
                 span.set_attribute("error.message", "Invalid input")
@@ -44,6 +45,9 @@ def create_article():  # noqa: E501
                 db.session.refresh(new_article)
                 span.set_attribute("article.id", new_article.id)
 
+                PRODUCT_COUNT.labels(product_type=new_article.tags[0] if new_article.tags else 'unknown').inc()
+                ACTIVE_ARTICLE_COUNT.inc()
+
             with tracer.start_as_current_span("build_response"):
                 response_article = ApiArticle(
                     id=new_article.id,
@@ -53,6 +57,7 @@ def create_article():  # noqa: E501
                     tags=new_article.tags,
                 )
             return response_article, 201
+
 
 def delete_article(id_):  # noqa: E501
     """delete_article
@@ -76,6 +81,8 @@ def delete_article(id_):  # noqa: E501
             db.session.delete(db_article)
             db.session.commit()
             span.set_attribute("article.id", id_)
+
+            ACTIVE_ARTICLE_COUNT.inc()
         return {"message": "Article deleted"}, 200
 
 def get_article_by_id(id_):  # noqa: E501
