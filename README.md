@@ -44,6 +44,10 @@ The entire dashboard settings file with PromQL can be found in ./grafana/provisi
 4. CPU_USAGE
 5. MEMORY_USAGE
 
+Custom metrics:
+6. PRODUCT_COUNT
+7. ACTIVE_ARTICLE_COUNT
+
 ## Description
 
 Uses prometheus-client within the flask app to track all the metrics.
@@ -81,7 +85,8 @@ http://localhost:9090/
 
 ## Image
 
-![изображение](https://github.com/user-attachments/assets/0be58030-b8f9-4277-8d41-e02b1310775e)
+![image](https://github.com/user-attachments/assets/2aedc926-d9c9-49ff-b7a7-512b119a1d73)
+
 
 PromQL examples:
 ```PromQL
